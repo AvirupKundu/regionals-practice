@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Admin Console{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mt-5">
+        <h1 class="m-0">Admin Console</h1>
+        <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+    </div>
+    <p>Welcome, {{ session.username }}!</p>
+    <hr>
+
+    <h3>AI-Powered Fault Suggestions</h3>
+    {% if suggestions %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">LLM Suggestions for Inspection</h5>
+            </div>
+            <div class="card-body">
+                <p>Based on real-time data analysis, the AI suggests that the following circuit breakers may have a fault and should be inspected:</p>
+                <ul class="list-group">
+                    {% for breaker_id in suggestions %}
+                        {% set breaker = circuit_breakers | selectattr('id', 'equalto', breaker_id) | first %}
+                        {% if breaker %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>ID:</strong> {{ breaker.id }}<br>
+                                    <strong>Status:</strong> <span class="badge badge-{{ 'danger' if breaker.status == 'Alert' else 'warning' if breaker.status == 'Warning' else 'success' }}">{{ breaker.status }}</span><br>
+                                    <small>
+                                        <strong>Current:</strong> {{ breaker.current }}A,
+                                        <strong>Temperature:</strong> {{ breaker.temperature }}°C
+                                    </small>
+                                </div>
+                                {% if breaker.id in flagged_breakers %}
+                                    <button class="btn btn-success" disabled>Flagged</button>
+                                {% else %}
+                                    <form action="/flag_breaker" method="post" class="m-0">
+                                        <input type="hidden" name="breaker_id" value="{{ breaker.id }}">
+                                        <button type="submit" class="btn btn-warning">Flag for Inspection</button>
+                                    </form>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-success" role="alert">
+            No specific faults detected by the AI at this time. All systems appear stable.
+        </div>
+    {% endif %}
+
+
+    <h3>Train Model</h3>
+    <form id="train-form" action="/train" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="data">Select a CSV file to train the model:</label>
+            <input type="file" class="form-control-file" id="data" name="data" required>
+        </div>
+        <div class="form-group">
+            <label for="model_type">Select Model:</label>
+            <select class="form-control" id="model_type" name="model_type" onchange="showDescription()">
+                <option value="random_forest">Random Forest</option>
+                <option value="logistic_regression">Logistic Regression</option>
+            </select>
+            <div id="random_forest_desc" class="form-text text-muted mt-2">
+                <small><strong>Random Forest:</strong> This model builds a "forest" of many decision trees and merges them to get a more accurate prediction. It's like asking a diverse group of experts for their opinion. It's generally very accurate and robust.</small>
+            </div>
+            <div id="logistic_regression_desc" class="form-text text-muted mt-2" style="display: none;">
+                <small><strong>Logistic Regression:</strong> This is a simpler and faster model that predicts the probability of an outcome. It's a good starting point and works well when the relationship between your inputs and the output is relatively straightforward.</small>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Train Model</button>
+    </form>
+
+    <div id="training-progress" class="card mt-3" style="display: none;">
+        <div class="card-body">
+            <h5 class="card-title">Training in Progress...</h5>
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+            <div class="mt-2">
+                <small>Time Elapsed: <span id="time-elapsed">0s</span></small><br>
+                <small>Estimated Time Remaining: <span id="time-remaining">calculating...</span></small>
+            </div>
+        </div>
+    </div>
+
+    {% if accuracy is not none %}
+    <div class="alert alert-info mt-3" role="alert">
+        <p><strong>Current Model:</strong> {{ model_name }}</p>
+        <p><strong>Model Accuracy:</strong> {{ accuracy }}</p>
+    </div>
+    <form action="/retrain" method="post">
+        <button type="submit" class="btn btn-secondary">Retrain with Different Model</button>
+    </form>
+    {% elif model_name is not none %}
+    <div class="alert alert-info mt-3" role="alert">
+        <p><strong>Current Model:</strong> {{ model_name }}</p>
+        <p>A model is trained, but no accuracy is available. You may need to train the model again.</p>
+    </div>
+    <form action="/retrain" method="post">
+        <button type="submit" class="btn btn-secondary">Retrain with Different Model</button>
+    </form>
+    {% else %}
+    <div class="alert alert-warning mt-3" role="alert">
+        No model has been trained yet.
+    </div>
+    {% endif %}
+{% endblock %}

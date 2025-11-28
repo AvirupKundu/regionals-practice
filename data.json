@@ -1,0 +1,213 @@
+{
+    "sensor_data": {
+      "electrical_measurements": [
+        "phase_current_IA",
+        "phase_current_IB",
+        "phase_current_IC",
+        "neutral_current_IN",
+        "current_rms",
+        "current_peak",
+        "current_harmonics",
+        "phase_phase_voltage_UAB",
+        "phase_phase_voltage_UBC",
+        "phase_phase_voltage_UCA",
+        "phase_neutral_voltage_VAN",
+        "phase_neutral_voltage_VBN",
+        "phase_neutral_voltage_VCN",
+        "frequency",
+        "power_factor",
+        "active_power_P",
+        "reactive_power_Q",
+        "apparent_power_S",
+        "energy_import_kWh",
+        "energy_export_kWh"
+      ],
+      "breaker_operation_and_health": [
+        "breaker_status",                    
+        "trip_cause_code",                   
+        "trip_coil_current",
+        "trip_coil_voltage",
+        "spring_motor_current",
+        "mechanism_position",
+        "operation_count",
+        "opening_time_ms",
+        "closing_time_ms",
+        "contact_bounce_time_ms",
+        "contact_resistance_micro_ohm",
+        "insulation_resistance_MOhm",
+        "leakage_current"
+      ],
+      "local_condition_sensors": [
+        "terminal_temperature_A",
+        "terminal_temperature_B",
+        "terminal_temperature_C",
+        "busbar_temperature",
+        "enclosure_internal_temperature",
+        "breaker_vibration_rms",
+        "breaker_vibration_peak",
+        "sf6_gas_pressure",
+        "sf6_gas_density",
+        "sf6_low_pressure_alarm"
+      ],
+      "meta": [
+        "timestamp_utc",
+        "breaker_id",
+        "feeder_id",
+        "panel_id",
+        "substation_id"
+      ]
+    },
+    "historical_data": {
+      "event_and_trip_logs": [
+        "trip_event_id",
+        "trip_timestamp_utc",
+        "trip_cause_code",
+        "pre_fault_current_profile",
+        "pre_fault_voltage_profile",
+        "fault_current_peak",
+        "fault_duration_ms",
+        "breaker_operating_time_ms",
+        "reclose_attempt_count",
+        "unsuccessful_close_flag",
+        "nuisance_trip_flag",
+        "lockout_event_flag",
+        "ied_alarm_codes"
+      ],
+      "asset_and_setting_history": [
+        "breaker_serial_number",
+        "breaker_model",
+        "breaker_type",
+        "rated_current_In",
+        "frame_size",
+        "rated_voltage",
+        "interrupting_capacity",
+        "utilization_category",
+        "protection_curve_type",
+        "installation_date",
+        "panel_location",
+        "protection_settings_version"
+      ],
+      "maintenance_history": [
+        "maintenance_record_id",
+        "maintenance_date",
+        "maintenance_type",
+        "test_type",
+        "test_result_status",
+        "timing_test_open_ms",
+        "timing_test_close_ms",
+        "contact_resistance_test_value",
+        "insulation_test_value_MOhm",
+        "mechanical_inspection_notes",
+        "defects_found",
+        "parts_replaced",
+        "technician_id"
+      ],
+      "outage_records": [
+        "outage_id",
+        "outage_start_timestamp",
+        "outage_end_timestamp",
+        "outage_duration_minutes",
+        "outage_root_cause",
+        "affected_load_kW",
+        "estimated_cost_impact"
+      ]
+    },
+    "environmental_data": {
+      "ambient_conditions": [
+        "room_temperature",
+        "room_relative_humidity",
+        "dew_point_temperature",
+        "condensation_alarm",
+        "dust_level_index",
+        "corrosive_gas_index"
+      ],
+      "installation_context": [
+        "indoor_outdoor_flag",
+        "enclosure_ip_rating",
+        "altitude_meters",
+        "ventilation_fan_status",
+        "door_open_status",
+        "space_heater_status",
+        "nearby_heat_source_flag",
+        "nearby_vibration_source_flag",
+        "contamination_risk_zone"
+      ]
+    },
+    "labeled_training_data": {
+      "time_window_metadata": [
+        "window_id",
+        "window_start_timestamp",
+        "window_end_timestamp",
+        "breaker_id"
+      ],
+      "condition_labels": [
+        "operating_state_label",       
+        "fault_type_label",            
+        "health_state_label"           
+      ],
+      "outcome_labels": [
+        "failure_within_7d_flag",
+        "failure_within_30d_flag",
+        "maintenance_required_flag",
+        "maintenance_performed_flag",
+        "maintenance_effective_flag"
+      ],
+      "data_quality_labels": [
+        "missing_data_flag",
+        "sensor_fault_flag",
+        "communication_fault_flag",
+        "test_mode_flag",
+        "manual_override_flag"
+      ]
+    },
+    "standards_and_thresholds": {
+      "nameplate_and_settings": [
+        "rated_current_In",
+        "rated_voltage",
+        "interrupting_capacity",
+        "utilization_category",
+        "curve_type",
+        "long_time_pickup_A",
+        "long_time_delay_s",
+        "short_time_pickup_multiple_In",
+        "short_time_delay_s",
+        "instantaneous_pickup_multiple_In",
+        "ground_fault_pickup_A",
+        "ground_fault_delay_s"
+      ],
+      "thermal_and_electrical_limits": [
+        "max_terminal_temperature",
+        "max_enclosure_temperature",
+        "allowed_temperature_rise",
+        "continuous_current_limit",
+        "overload_derating_factor",
+        "time_current_curve_points",
+        "let_through_energy_limit_I2t"
+      ],
+      "environmental_and_mechanical_limits": [
+        "min_ambient_temperature",
+        "max_ambient_temperature",
+        "max_relative_humidity",
+        "max_vibration_rms",
+        "max_vibration_peak",
+        "sf6_normal_pressure_range",
+        "sf6_alarm_pressure_threshold",
+        "sf6_trip_pressure_threshold",
+        "min_trip_coil_voltage",
+        "max_trip_coil_voltage",
+        "min_close_coil_voltage",
+        "max_close_coil_voltage",
+        "max_operation_count_before_inspection"
+      ],
+      "coordination_and_safety_rules": [
+        "upstream_breaker_id",
+        "downstream_breaker_ids",
+        "selectivity_margin_ms",
+        "max_allowed_fault_current_at_bus",
+        "coordination_table_reference",
+        "inspection_criteria",
+        "test_interval_months"
+      ]
+    }
+  }
+  

@@ -1,0 +1,40 @@
+{
+  "circuit_breakers": [
+    {
+      "id": "CB-001",
+      "location": "Substation A, Grid 1",
+      "status": "Operational",
+      "current": 250.5,
+      "voltage": 220.1,
+      "temperature": 45.2,
+      "last_maintenance": "2023-10-26"
+    },
+    {
+      "id": "CB-002",
+      "location": "Substation B, Grid 1",
+      "status": "Warning",
+      "current": 300.2,
+      "voltage": 218.9,
+      "temperature": 65.7,
+      "last_maintenance": "2023-09-15"
+    },
+    {
+      "id": "CB-003",
+      "location": "Substation C, Grid 2",
+      "status": "Alert",
+      "current": 450.8,
+      "voltage": 215.5,
+      "temperature": 85.1,
+      "last_maintenance": "2023-08-01"
+    },
+    {
+      "id": "CB-004",
+      "location": "Substation D, Grid 2",
+      "status": "Operational",
+      "current": 245.1,
+      "voltage": 221.0,
+      "temperature": 42.8,
+      "last_maintenance": "2023-11-05"
+    }
+  ]
+}

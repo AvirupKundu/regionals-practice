@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>Circuit Breaker Dashboard</h1>
+        <div id="dashboard-cards" class="card-container">
+            <!-- Cards will be injected here by JavaScript -->
+        </div>
+    </div>
+    <script>
+        function fetchDashboardData() {
+            fetch('/dashboard/data')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('dashboard-cards');
+                    container.innerHTML = ''; // Clear existing cards
+                    data.circuit_breakers.forEach(breaker => {
+                        let cardClass = 'card';
+                        if (breaker.status === 'Alert') {
+                            cardClass += ' alert';
+                        } else if (breaker.status === 'Warning') {
+                            cardClass += ' warning';
+                        }
+
+                        const card = `
+                            <div class="${cardClass}">
+                                <h2>${breaker.id}</h2>
+                                <p><strong>Location:</strong> ${breaker.location}</p>
+                                <p><strong>Status:</strong> ${breaker.status}</p>
+                                <p><strong>Current:</strong> ${breaker.current} A</p>
+                                <p><strong>Voltage:</strong> ${breaker.voltage} V</p>
+                                <p><strong>Temperature:</strong> ${breaker.temperature} °C</p>
+                                <p><strong>Last Maintenance:</strong> ${breaker.last_maintenance}</p>
+                            </div>
+                        `;
+                        container.innerHTML += card;
+                    });
+                });
+        }
+
+        // Fetch data every 1 second
+        setInterval(fetchDashboardData, 1000);
+        // Initial fetch
+        fetchDashboardData();
+    </script>
+{% endblock %}

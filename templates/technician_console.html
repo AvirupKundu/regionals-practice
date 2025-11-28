@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Console</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mt-5">
+            <h1 class="m-0">Technician Console</h1>
+            <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+        </div>
+        <p>Welcome, {{ session.username }}!</p>
+        <hr>
+
+        <h3>Flagged for Inspection</h3>
+        {% if flagged_breakers %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">The following circuit breakers have been flagged for inspection by an admin:</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for breaker in flagged_breakers %}
+                        <li class="list-group-item">
+                            <strong>ID:</strong> {{ breaker.id }}<br>
+                            <strong>Status:</strong> <span class="badge badge-{{ 'danger' if breaker.status == 'Alert' else 'warning' if breaker.status == 'Warning' else 'success' }}">{{ breaker.status }}</span><br>
+                            <small>
+                                <strong>Current:</strong> {{ breaker.current }}A,
+                                <strong>Voltage:</strong> {{ breaker.voltage }}V,
+                                <strong>Temperature:</strong> {{ breaker.temperature }}°C
+                            </small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+                No breakers are currently flagged for inspection.
+            </div>
+        {% endif %}
+        <hr>
+
+        <h3>Predict Maintenance</h3>
+        {% if model_name %}
+            <div class="alert alert-info" role="alert">
+                <strong>Current Model:</strong> {{ model_name }}
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                No model has been trained yet. Predictions are not available.
+            </div>
+        {% endif %}
+        <form action="/predict" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="phase_current_IA">Phase Current IA</label>
+                    <input type="number" class="form-control" id="phase_current_IA" name="phase_current_IA" step="any" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="phase_phase_voltage_UAB">Phase-Phase Voltage UAB</label>
+                    <input type="number" class="form-control" id="phase_phase_voltage_UAB" name="phase_phase_voltage_UAB" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="terminal_temperature_A">Terminal Temperature A</label>
+                    <input type="number" class="form-control" id="terminal_temperature_A" name="terminal_temperature_A" step="any" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="breaker_vibration_rms">Breaker Vibration RMS</label>
+                    <input type="number" class="form-control" id="breaker_vibration_rms" name="breaker_vibration_rms" step="any" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="sf6_gas_pressure">SF6 Gas Pressure</label>
+                    <input type="number" class="form-control" id="sf6_gas_pressure" name="sf6_gas_pressure" step="any" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="operation_count">Operation Count</label>
+                    <input type="number" class="form-control" id="operation_count" name="operation_count" step="any" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" {% if not model_name %}disabled{% endif %}>Predict</button>
+        </form>
+        {% if prediction is not none %}
+        <div class="alert alert-success mt-3" role="alert">
+            <strong>Prediction:</strong> {{ prediction }}
+        </div>
+        {% endif %}
+        {% if prediction_error is not none %}
+        <div class="alert alert-danger mt-3" role="alert">
+            <strong>Error:</strong> {{ prediction_error }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

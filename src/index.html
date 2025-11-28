@@ -3,10 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
+    <title>Real-time Sensor Data</title>
+    <style>
+      body { font-family: sans-serif; }
+      #data {
+        white-space: pre-wrap;
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        padding: 10px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+    </style>
   </head>
-
   <body>
-    <h1>Hello World</h1>
+    <h1>Real-time Sensor Data</h1>
+    <pre id="data">Loading...</pre>
+
+    <script>
+      const dataContainer = document.getElementById('data');
+
+      async function fetchData() {
+        try {
+          const response = await fetch('/data');
+          const data = await response.json();
+          dataContainer.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          dataContainer.textContent = 'Error loading data.';
+        }
+      }
+
+      // Fetch data every second
+      setInterval(fetchData, 1000);
+
+      // Initial fetch
+      fetchData();
+    </script>
   </body>
 </html>
